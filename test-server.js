@@ -40,3 +40,4 @@ describe('Restaurants', function() {
 //go to www file in bin and add module.export=server;
 
 //to run test, simply go into cmd and type mocha command
+//http://mherman.org/blog/2015/09/10/testing-node-js-with-mocha-and-chai/#.Wdbr4mhSxPY
