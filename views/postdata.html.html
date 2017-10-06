@@ -1,0 +1,53 @@
+<html>
+    <head>
+       <title>Hello world</title>
+    </head>
+
+
+
+    <body >  
+
+Name: <input type="text" id ="name" name="name">
+<br>
+Phone: <input type="number" id ="phone" name="phone">
+<br>
+<button type="buttton" onclick="postdata()">click me!</button>
+</body>
+
+
+
+<script>
+
+    function postdata(){
+
+        var name = document.getElementById("name").value;
+        var phone = document.getElementById("phone").value;
+
+        console.log("hello"+name + phone);
+        var jsonobj = {};
+
+        jsonobj["name"] = name;
+        jsonobj["phone"] = phone;
+
+        console.log(jsonobj);
+
+        var xhr = new XMLHttpRequest();  
+        xhr.open("POST", "http://localhost:3000/dishes/del",true);
+        xhr.setRequestHeader("content-type","application/json")  
+        xhr.send(JSON.stringify(jsonobj));
+        xhr.onreadystatechange = function() 
+        { 
+            // If the request completed, close the extension popup
+            if (xhr.readyState == 4)
+            if (xhr.status == 200)
+              var json_data = xhr.responseText; 
+        };
+    }
+
+
+</script>
+
+
+
+
+</html>
