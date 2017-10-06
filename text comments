@@ -1,0 +1,13 @@
+Start MongoDB Server
+mongod --dbpath=data
+
+Open Mongo Shell(to view database)
+Mongo
+
+if mongod command not recognised, then we have to add it into PATH environment variable
+so copy the bin folder address in mongodb installation folder and add it to path.
+
+//shell queries
+Db
+Use Gulp			{Switch to Gulp database}
+Db.restaurants.find().pretty()  {to view restaurants collection}
