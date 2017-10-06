@@ -1,0 +1,323 @@
+<html>
+<body>
+<div id="table"> 
+</div>
+<div id="table2"> </div>
+<div id="print"> </div>
+<pre id="json"></pre>
+</body>
+
+<script>
+var table2 = document.createElement('table');
+var resdiv = document.getElementById('table2');
+
+
+// restaurant name
+var res = table2.insertRow(0);
+
+var res1 = res.insertCell(0);
+res1.innerHTML="Restaurant Name";
+var res2 = res.insertCell(1);
+
+var rest_name = document.createElement("input");
+rest_name.setAttribute("id", "restName");
+rest_name.type = 'text';
+res2.appendChild(rest_name);
+/*
+// restaurant id
+res = table2.insertRow(-1);
+
+res1 = res.insertCell(0);
+res1.innerHTML="Restaurant Id";
+res2 = res.insertCell(-1);
+
+var rest_id = document.createElement("input");
+rest_id.setAttribute("id", "restId");
+rest_id.type = 'text';
+res2.appendChild(rest_id);
+*/
+// restaurant location
+res = table2.insertRow(-1);
+
+res1 = res.insertCell(0);
+res1.innerHTML="Restaurant Location";
+res2 = res.insertCell(-1);
+
+var rest_loc = document.createElement("input");
+rest_loc.setAttribute("id", "restLocation");
+rest_loc.type = 'text';
+res2.appendChild(rest_loc);
+
+resdiv.appendChild(table2);
+
+
+
+var table = document.createElement('table');
+var div = document.getElementById('table2');
+var print = document.getElementById('print');
+
+var count=0;
+var ingred=[];
+
+
+var dishes=[];
+var names=[];
+var weights=[];
+var dishType=[];
+var gluten=[];
+var lactose=[];
+
+
+function updateVegetarian(value,dishIndex){
+	dishType[dishIndex]=value;
+}
+function updateLactose(value,dishIndex){
+	lactose[dishIndex]=value;
+}
+function updateGluten(value,dishIndex){
+	gluten[dishIndex]=value;
+}
+
+function addDish(){
+	ingred.push(0);		//set the total ingredients of this dish to 0
+	count++;	//update the total number of dishes
+	
+	var rows=rowsBefore(count-1);	//now you get the total number of rows before you; so the index of last row before you is rows-1
+	
+	var row = table.insertRow(rows);
+
+	// Insert
+	var cell1 = row.insertCell(0);	
+	cell1.innerHTML="Dish :"+count;
+	var cell2 = row.insertCell(-1);
+	//cell2.innerHTML="<input type='text' id='Dish"+(count-1)+"'>";
+
+	//trying alternate method to create dish name text input
+	var textbox = document.createElement("input");
+    textbox.setAttribute("id", "Dish"+(count-1));
+    textbox.type = 'text';
+    textbox.value='dishname';
+	dishes.push(textbox);
+	
+    cell2.appendChild(textbox);
+	
+	//creating drop down for the type of dish
+	var cell4 = row.insertCell(-1);
+	cell4.innerHTML=
+	"<select id='dropdown"+(count-1)+"' onchange='updateVegetarian(this.value,"+(count-1)+")'><option selected value=0>Vegan</option><option value=1>Vegetarian</option><option value=2>Non Vegetarian</option></select>";
+	//onchange=updateDropDown(this,(count-1))
+
+	
+	//including the row for gluten and lactose content
+	var row2 = table.insertRow(rows+1);
+	
+	var cell5=row2.insertCell(-1);
+	cell5.innerHTML="Lactose/Gluten content :";
+	
+	//dropdown for lactose
+	var cell6 = row2.insertCell(-1);
+	cell6.innerHTML=
+	"<select id='lactose"+(count-1)+"' onchange='updateLactose(this.value,"+(count-1)+")'><option selected value=1>Contains Lactose</option><option value=0>Lactose free</option></select>";
+
+	//dropdown for gluten
+	var cell7 = row2.insertCell(-1);
+	cell7.innerHTML=
+	"<select id='gluten"+(count-1)+"' onchange='updateGluten(this.value,"+(count-1)+")'><option selected value=1>Contains Gluten</option><option value=0>Gluten free</option></select>";
+	
+
+
+	
+	names.push(new Array());
+	weights.push(new Array());
+	dishType.push(0);
+	lactose.push(1);
+	gluten.push(1);
+	addIngredient(count-1);	//add the first ingredient
+	
+	var row3 = table.insertRow(rows+3);	
+	var cell3 = row3.insertCell(0);	
+	cell3.innerHTML="<button onclick='addIngredient("+(count-1)+")'>Add Another Ingredient</button>";
+
+	
+	
+}
+function addIngredient(dishIndex){
+	
+	var rows=rowsBefore(dishIndex);	//get count of all rows due to previous rows
+	rows+=ingred[dishIndex]+2;
+	
+	var row = table.insertRow(rows);
+	var cell1 = row.insertCell(0);	
+	cell1.innerHTML="Ingredient :"+(ingred[dishIndex]+1);			//displaying text
+	var cell2 = row.insertCell(-1);
+	//cell2.innerHTML="<input type='text' id='Dish"+dishIndex+"Ingredient"+ingred[dishIndex]+"'>";		//taking input - ingredient name
+    var n = document.createElement('input');
+    n.type = 'text';
+    n.setAttribute("id", "Dish"+dishIndex+"Ingredient"+ingred[dishIndex]);       
+	
+	cell2.appendChild(n);
+
+	var cell3 = row.insertCell(-1);
+	//cell3.innerHTML="<input type='text' id='Dish"+dishIndex+"IngredientWeight"+ingred[dishIndex]+"'>";		//taking input - ingredient weight
+    var wt = document.createElement('input');
+    wt.type = 'text';
+    wt.setAttribute("id", "Dish"+dishIndex+"IngredientWeight"+ingred[dishIndex]);
+	
+	cell3.appendChild(wt);
+	
+	ingred[dishIndex]++;
+	names[dishIndex].push(n);
+	weights[dishIndex].push(wt);
+}
+
+function rowsBefore(dishIndex){	//returns the number od rows before this particular dishIndex
+
+	var rows=0;
+	for(var i=0;i<dishIndex;i++){
+		rows+=ingred[i]+3;
+	}
+	return rows;
+}
+
+function submit(){
+	//print.appendChild(count);
+	//document.write(dishes[0].value);
+	//var rname="name",loc="loc",id="id",kya="kya",kya1="kya",kya2="kya2",type="1 number";
+
+	/*	
+	jsonObj.menu_items=menu_items;
+	*/
+	/*
+	var jsonObj = {
+         "restaurant_name": rname,
+         "restaurant_location": loc,
+         "restaurant_id": id,
+         "menu_items":[
+                                                                           {
+																		   "name":kya,
+                                                                           "Ingredients":[	{
+																							"ingredient_name": kya1,
+																							"ingredient_weight":kya2
+																							}
+																		   ],
+																		   "cal_content":[],
+																		   "Type": type
+                                                                           },
+                              ]
+       }
+	   */
+	var jsonObj={};
+	jsonObj["restaurant_name"]=rest_name.value;
+	jsonObj["restaurant_location"]=rest_loc.value;
+	jsonObj["restaurant_id"]="id";
+	
+	var menu_items=[];
+	
+	for(var i=0;i<count;i++){	//traversing for each dish
+		
+		var dish={};
+		dish["item_name"]=dishes[i].value;
+		dish["vegetarian_index"]=dishType[i];
+		dish["lactose_content"]=lactose[i];
+		dish["gluten_index"]=gluten[i];
+		dish["item_url"]="url";
+		dish["item_description"]="description";
+		dish["cal_content"]=[];
+		
+		//var str = 'dish'+i;
+
+		//str = str.replace(/^\s+|\s+$/g,"");		
+		//var maki = document.getElementById("Dish0").value;
+		//document.write("Dish  kya chal rha hai ye:"+(i+1)+" is "+maki);
+		//document.write("Dish "+i+" : "+dishes[i].value+" Type : "+dishType[i] );
+		//jsonObj.menu_items.push();
+		
+		//jsonObj.menu_items[i].name=dishes[i];
+		//jsonObj.menu_items[i].Type=dishType[i]; 
+		
+		var ing_array=[];
+		for(var j=0;j<ingred[i];j++){		//traversing for each ingredient
+			/*var ingredient = document.getElementById("Dish"+i+"Ingredient"+ingred[j]).value;
+			var weight = document.getElementById("Dish"+i+"IngredientWeight"+ingred[j]).value;
+			
+			document.write("Ingredient :"+(j+1)+" is "+ingredient);
+			document.write("Weight :"+(j+1)+" is "+weight);
+			*/
+			//document.write("Ingredient "+j+" = "+names[i][j].value+" "+weights[i][j].value);
+			//jsonObj.menu_items[i].Ingredients.push();
+			//jsonObj.menu_items[i].Ingredients[j].ingredient_name=names[i][j].value;
+			//jsonObj.menu_items[i].Ingredients[j].ingredient_weight=weights[i][j].value;
+			var ing={};
+			ing["ingredient_name"]=names[i][j].value;
+			ing["ingredient_weight"]=weights[i][j].value;
+			ing_array.push(ing);
+		}
+		dish["Ingredients"]=ing_array;
+		menu_items.push(dish);
+		
+	}
+	jsonObj["menu_items"]=menu_items;
+	
+	var jsonStr = JSON.stringify(jsonObj, undefined, 2);
+	document.getElementById("json").innerHTML = jsonStr;
+	
+	var xhr = new XMLHttpRequest();
+    xhr.open("POST","http://192.168.0.24:80/calculate",true);
+	//xhr.setRequestHeader('Content-Type', 'application/json');
+	//xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+    xhr.send(JSON.stringify(jsonObj));
+	
+	/*
+	var http = require('http');
+	
+	var options = {
+    host: 'http://192.168.0.24:80/calculate',
+    port: 80,
+
+    method: 'POST',
+	};
+	var post_req = http.request(options, function(res) {
+/*	res.setEncoding('utf8');
+      res.on('data', function (chunk) {
+          document.getElementById("print").innerHTML =chunk;
+    });
+	
+	});
+
+	
+	post_req.write(jsonStr);
+    post_req.end();
+*/
+		
+}
+
+
+
+
+
+addDish();
+var row1 = table.insertRow(-1);
+var cell1 = row1.insertCell(-1);
+cell1.innerHTML="<button onclick='addDish()'>Add Another Dish</button>";
+
+
+var row2 = table.insertRow(-1);	
+var cell2 = row2.insertCell(-1);	
+cell2.innerHTML="<button onclick='submit()'>Submit</button>";
+
+
+div.appendChild(table);
+
+/*
+var btn = document.createElement("BUTTON");        // Create a <button> element
+var t = document.createTextNode("CLICK ME");       // Create a text node
+btn.appendChild(t);                                // Append the text to <button>
+document.body.appendChild(btn);                    // Append <button> to <body>
+btn.onclick=submit();
+*/
+</script>
+
+
+
+
+</html>
